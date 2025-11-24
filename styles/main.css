@@ -53,12 +53,12 @@ body {
   filter: brightness(0) invert(1);
 }
 
-.menu__item_active {
+/* .menu__item_active:hover {
   background: #5051f9;
 }
 .menu__item_active: img {
   filter: brightness(0) invert(1);
-}
+} */
 
 .menu__add {
   background: none;
@@ -136,6 +136,7 @@ main {
   background: #fff;
   display: flex;
   align-items: center;
+  margin-bottom: 12px;
 }
 
 .habbit__day {
@@ -147,8 +148,44 @@ main {
   line-height: 16px;
   color: #000;
   padding: 20px 40px;
+  min-width: 150px;
 }
-.habbit__coment {
+.habbit__comment {
   font-size: 14px;
-  line-height: 16px;
+  line-height: 18px;
+  padding: 20px 25px;
+}
+.habbit__delete {
+  margin-left: auto;
+  margin-right: 10px;
+  background: none;
+  background-color: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 2px;
+}
+
+.habbit__delete:hover {
+  background: #eff2ff;
+}
+
+input {
+  font-family: "Comfortaa", sans-serif;
+  border: 1px solid #e7ebfb;
+  border-radius: 9px;
+  background: #fff;
+  padding: 12px 20px;
+}
+
+.habbit__form {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+  padding: 0px 25px;
+}
+
+button {
+  border-radius: 9px;
+  background: #edecfe;
 }
