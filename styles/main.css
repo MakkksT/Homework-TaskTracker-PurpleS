@@ -53,12 +53,12 @@ body {
   filter: brightness(0) invert(1);
 }
 
-/* .menu__item_active:hover {
+.menu__item_active:hover {
   background: #5051f9;
 }
 .menu__item_active: img {
   filter: brightness(0) invert(1);
-} */
+}
 
 .menu__add {
   background: none;
@@ -123,7 +123,6 @@ h1 {
 }
 .progress__cover-bar {
   position: absolute;
-  width: 50%;
   height: 5px;
   border-radius: 4px;
   background: #5051f9;
