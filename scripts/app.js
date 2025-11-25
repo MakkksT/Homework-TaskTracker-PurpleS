@@ -6,7 +6,12 @@ const HABBIT_KEY = 'HABBIT_KEY'; //храним ключи, В дальнейш�
 
 //page
 const page = {                  //Описывает работу Меню
-    menu: document.querySelector('.menu__list')
+    menu: document.querySelector('.menu__list'),
+    header: {
+        h1: document.querySelector('.h1'),
+        progressPercent: document.querySelector('.progress__percent'),
+        progressCoverBar: document.querySelector('.progress__cover-bar')    
+    }
 }
 
 
@@ -58,7 +63,16 @@ function rerenderMenu(activeHabbit) {
 }
 //Рендер шапки
 function renderHead(activeHabbit){
-
+    if (!activeHabbit){           //Проверка если у нас нет хеббитАйди в шапке ничего не выполняем
+        return;
+    }
+    page.header.h1.innerText = activeHabbit.name;
+    //Пишем тернарный оператор для подсчета прогресс бара
+    const progress = activeHabbit.days.length / activeHabbit.target > 1 //Условие
+    ? 100                                                               //true
+    : activeHabbit.days.length / activeHabbit.target * 100;             //false
+    page.header.progressPercent.innerText = progress.toFixed(0) + ' %';       //toFixed помогает округлять до целого числа, даже дробные
+    page.header.progressCoverBar.setAttribute('style', `width: ${progress}%`); //увеличивает полоску прогресс бара
 }
 
 function rerender(activeHabbitId) {
