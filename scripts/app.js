@@ -3,6 +3,7 @@
 
 let habbits = [];
 const HABBIT_KEY = 'HABBIT_KEY'; //храним ключи, В дальнейшем на TypeScripte это понадобиться 
+let globalActiveHabbitId;
 
 //page
 const page = {                  //Описывает работу Меню
@@ -34,7 +35,6 @@ function loadData() {                   //localStorage.getItem() — это ме
 //Функция сохранения
 function saveData() {
     localStorage.setItem(HABBIT_KEY, JSON.stringify(habbits)); //localStorage.setItem() — это метод в JavaScript, который используется для сохранения данных в локальном хранилище браузера.
-
 }
 
 //render
@@ -93,6 +93,7 @@ function rerenderContent(activeHabbit) {
 
 
 function rerender(activeHabbitId) {
+    globalActiveHabbitId = activeHabbitId;
     const activeHabbit = habbits.find(habbit => habbit.id === activeHabbitId);
     if (!activeHabbit){           //Проверка если у нас нет хеббитАйди в шапке ничего не выполняем
         return;
@@ -104,8 +105,26 @@ function rerender(activeHabbitId) {
 
 //work with days
 function addDays(event) {
+    const form = event.target;
     event.preventDefault();         //Отменяет действие браузера по умолчанию для конкретного события.
-    const data = new FormData(event.target);    //Фактически мы получаем новый объект, который является форм датой
+    const data = new FormData(form);    //Фактически мы получаем новый объект, который является форм датой
+    const comment = data.get('comment');
+    form['comment'].classList.remove('error');
+    if(!comment) {
+        form['comment'].classList.add('error'); //Достучались до формы и класса в css подсвечивает красным, если пустое поле
+    }
+    habbits = habbits.map( habbit => {
+        if (habbit.id === globalActiveHabbitId) {   //Если у нас совпдает, то мы находимся в нужной привычке
+            return {
+                ...habbit,                  //Обращаемся спред, чтобы использовать данные массива и добавить новые
+                days: habbit.days.concat([{comment}])    //Используем конкатенацию, так придёт новый массив             
+            }
+        }
+        return habbit;
+    });                     //.map перебирает каждый элемент массива, возвращает новый массив,
+    form['comment'].value = '';
+    rerender(globalActiveHabbitId);
+    saveData();
 }
 
 
