@@ -81,7 +81,7 @@ function rerenderContent(activeHabbit) {
         element.innerHTML = element.innerHTML = `
         <div class="habbit__day">День ${Number(index) + 1}</div>
         <div class="habbit__comment">${activeHabbit.days[index].comment}</div>
-        <button class="habbit__delete">
+        <button class="habbit__delete" onclick="deleteDay(${index})">
         <img src="./images/delete.svg" alt="Удалить день ${Number(index) + 1}" />
         </button>
         `;
@@ -123,6 +123,23 @@ function addDays(event) {
         return habbit;
     });                     //.map перебирает каждый элемент массива, возвращает новый массив,
     form['comment'].value = '';
+    rerender(globalActiveHabbitId);
+    saveData();
+}
+
+// delete day
+
+function deleteDay(index) {
+    habbits = habbits.map(habbit => {
+        if (habbit.id === globalActiveHabbitId) {   //Проверка что в текущей привычке
+            habbit.days.splice(index, 1);           //Обращаемся к days splice() для удаления по индексу или диапазону
+            return {
+                ...habbit,
+                days: habbit.days
+            };
+        }
+        return habbit                              //Иначе ничего не делаем и возвращаем habbit
+    });
     rerender(globalActiveHabbitId);
     saveData();
 }
