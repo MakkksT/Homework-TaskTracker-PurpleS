@@ -216,20 +216,35 @@ function addHabbit(event) {
     rerender(maxId + 1);
 }
 
+const welcomePopup = document.getElementById('welcome-popup');
+function toggleWelcomePopup() {
+  if (welcomePopup.classList.contains('cover_hidden')) {
+    welcomePopup.classList.remove('cover_hidden');
+  } else {
+    welcomePopup.classList.add('cover_hidden');
+  }
+}
+
+
 //init
 //Для того чтобы инициализация была один раз будем использовать Intermediate local function в виде стрелоч. функции
 // и в рамках этой функции будем исполнять loadData()
 (() => {
-    loadData();
-    const hashId = Number(document.location.hash.replace('#', ''));
-    const urlHabbit = habbits.find(habbit => habbit.id == hashId);
-    if (urlHabbit) {
-        rerender(urlHabbit.id);
-    } else {
-        rerender(habbits[0].id);
-    }
-      
-    // rerenderMenu(habbits[0].id);
+  loadData();
+  if (habbits.length === 0) {
+    // Если привычек нет, показываем приветственное окно
+    toggleWelcomePopup();
+    return; // дальше рендерить нечего
+  }
+
+  const hashId = Number(document.location.hash.replace('#', ''));
+  const urlHabbit = habbits.find(habbit => habbit.id == hashId);
+  if (urlHabbit) {
+    rerender(urlHabbit.id);
+  } else {
+    rerender(habbits[0].id);
+  }
 })();
+
 
 //Добавили минимально данных для динам. проверки, потому что без данных это будет трудно сделать
