@@ -51,7 +51,34 @@ function togglePopup() {
 
 }
 
+function resetForm(form, fields) {
+     for (const field of fields) {
+       form[field].value = '';
+    }
+}
 
+function validateAndGetFormData(form, fields) {
+    const formData = new FormData(form);
+    const res = {};
+    for (const field of fields) {
+       const fieldValue = formData.get(field); 
+       form[field].classList.remove('error');
+        if(!fieldValue) {
+        form[field].classList.add('error'); 
+    }
+    res[field] = fieldValue;
+    }
+    let isValid = true;
+    for (const field of fields) {
+        if (!res[field]) {
+            isValid = false;
+        }
+    }
+    if (!isValid) {
+        return;
+    }
+    return res;
+}
 
 //render
 function rerenderMenu(activeHabbit) {
@@ -121,24 +148,21 @@ function rerender(activeHabbitId) {
 
 //work with days
 function addDays(event) {
-    const form = event.target;
-    event.preventDefault();         //Отменяет действие браузера по умолчанию для конкретного события.
-    const data = new FormData(form);    //Фактически мы получаем новый объект, который является форм датой
-    const comment = data.get('comment');
-    form['comment'].classList.remove('error');
-    if(!comment) {
-        form['comment'].classList.add('error'); //Достучались до формы и класса в css подсвечивает красным, если пустое поле
+    event.preventDefault();         //Отменяет действие браузера по умолчанию для конкретного события. 
+    const data = validateAndGetFormData(event.target, ['comment']);
+    if (!data) {
+        return;
     }
     habbits = habbits.map( habbit => {
         if (habbit.id === globalActiveHabbitId) {   //Если у нас совпдает, то мы находимся в нужной привычке
             return {
                 ...habbit,                  //Обращаемся спред, чтобы использовать данные массива и добавить новые
-                days: habbit.days.concat([{comment}])    //Используем конкатенацию, так придёт новый массив             
+                days: habbit.days.concat([{comment: data.comment}])    //Используем конкатенацию, так придёт новый массив             
             }
         }
         return habbit;
-    });                     //.map перебирает каждый элемент массива, возвращает новый массив,
-    form['comment'].value = '';
+    });
+    resetForm (event.target, ['comment']);
     rerender(globalActiveHabbitId);
     saveData();
 }
@@ -167,6 +191,25 @@ function setIcon(context, icon) {
     const activeIcon = document.querySelector('.icon.icon_active');
     activeIcon.classList.remove('icon_active');
     context.classList.add('icon_active');
+}
+
+function addHabbit(event) {
+    event.preventDefault();         //Отменяет действие браузера по умолчанию для конкретного события. 
+    const data = validateAndGetFormData(event.target, ['name', 'icon', 'target']);
+    if (!data) {
+        return;
+    }
+    const maxId = habbits.reduce((acc, habbit) => acc > habbit.id ? acc : habbit.id, 0);
+    habbits.push ({
+        id: maxId + 1,
+        name: data.name,
+        target: data.target,
+        icon: data.icon,
+        days: []
+    });
+    resetForm(event.target, ['name','target'])
+    togglePopup();
+    rerender(maxId + 1);
 }
 
 //init
